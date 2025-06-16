@@ -4,7 +4,7 @@ const postSchema = new mongoose.Schema({
     title : { type: String, required: true, unique: true },
     text : { type: String, required: true, unique: true },
     userId : { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    likes : { type: Int64Array, required: true, unique: true },
+    likes : { type: Number, required: true, unique: true },
 });
 
 // create model 
@@ -64,3 +64,11 @@ async function deletePost(id) {
     await Post.deleteOne({"_id": post._id});
     return "Post deleted successfully";
 }
+
+module.exports = {
+    getPostById,
+    createPost,
+    editPost,
+    deletePost
+};
+

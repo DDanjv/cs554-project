@@ -43,3 +43,10 @@ async function deleteFollow(followerId, followingId) {
     }
     return follow;
 }
+
+module.exports = {
+    getFollowById,
+    getFollowers,
+    createFollow,
+    deleteFollow
+};

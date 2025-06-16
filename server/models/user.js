@@ -99,8 +99,21 @@ async function UpdateUserName(id, username) {
 
 //delete
 
-async function DeleteUser(username) {
-    const user = await getUser(username);
-    await User.deleteOne({"_id": user._id});
+async function DeleteUser(id) {
+    const user = await GetUserById(id);
+    await User.deleteOne({"_id": id});
     return "User deleted successfully";
 }
+
+module.exports = {
+    User,
+    login,
+    register,
+    getUser,
+    GetUserById,
+    getNameById,
+    UpdatePassword,
+    UpdateEmail,
+    UpdateUserName,
+    DeleteUser
+};
