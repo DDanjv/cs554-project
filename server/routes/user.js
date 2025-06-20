@@ -76,9 +76,9 @@ router
             });
         }
     })
-    .delete('/delete', async (req, res) => {
+    .delete('/DeleteUser', async (req, res) => {
         try {
-            const user = await User.delete(req.body.id)
+            const user = await User.DeleteUser(req.body.id)
             res.send({
                 user,
                 id: undefined

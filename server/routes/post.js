@@ -5,11 +5,12 @@ const router = express.Router();
 router
     .post('/createPost', async (req, res) => {
             try{
-                const post = await User.createPost(req.body.title, req.body.content);
+                const post = await User.createPost(req.body.title, req.body.text, req.body.userId);
                 res.send({
                     post,
                     title: undefined,
-                    content: undefined
+                    text: undefined,
+                    userId: undefined
                 })
             } catch (error){
                 res.status(401).send({
@@ -34,12 +35,12 @@ router
         })
     .put('/updatePost', async (req, res) => {
             try{
-                const post = await User.updatePost(req.body.id, req.body.title, req.body.content);
+                const post = await User.updatePost(req.body.id, req.body.title, req.body.text);
                 res.send({
                     post,
                     id: undefined,
                     title: undefined,
-                    content: undefined
+                    text: undefined
                 })
             } catch (error){
                 res.status(401).send({

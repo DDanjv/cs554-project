@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
     title : { type: String, required: true, unique: true },
-    text : { type: String, required: true, unique: true },
+    text : { type: String, required: true },
     userId : { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    likes : { type: Number, required: true, unique: true },
+    likes : { type: Number, default: 0 }
 });
 
 // create model 
@@ -21,12 +21,11 @@ async function getPostById(id) {
 
 //create
 
-async function createPost(userId, title, text) {
+async function createPost(title, text, userId) {
     const newPost = new Post({
         title, 
-        text, 
-        userId,
-        likes: 0
+        text,
+        userId: userId
     });
 
     if(await Post.findOne({title: title})){
@@ -43,7 +42,7 @@ async function createPost(userId, title, text) {
 }
 
 // edit 
-async function editPost(id, title, text) {
+async function updatePost(id, title, text) {
     const post = await getPostById(id);
     if(title === null || text === null){
         throw new Error("missing info");
@@ -68,7 +67,7 @@ async function deletePost(id) {
 module.exports = {
     getPostById,
     createPost,
-    editPost,
+    updatePost,
     deletePost
 };
 

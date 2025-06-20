@@ -45,11 +45,10 @@ router
     })
     .delete('/deleteFollow', async (req, res) => {
         try {
-            const follow = await Follow.deleteFollow(req.body.followerId, req.body.followingId);
+            const follow = await Follow.deleteFollow(req.body.id);
             res.send({
                 follow,
-                followerId: undefined,
-                followingId: undefined
+                id: undefined
             });
         } catch (error) {
             res.status(401).send({
@@ -59,11 +58,11 @@ router
     })
     .delete('/deleteFollower', async (req, res) => {
         try {
-            const follow = await Follow.deleteFollower(req.body.id, req.body.User);
+            const follow = await Follow.deleteFollower(req.body.id, req.body.username);
             res.send({
                 follow,
                 id: undefined,
-                User: undefined
+                username: undefined
             });
         } catch (error) {
             res.status(401).send({

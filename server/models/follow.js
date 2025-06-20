@@ -36,26 +36,29 @@ async function createFollow(id) {
     return newFollow;
 }
 //delete
-async function deleteFollow(followerId, followingId) {
-    const follow = await getFollowById(followerId);
+async function deleteFollow(id) {
+    const follow = await getFollowById(id);
     if (!follow) {
         throw new Error("Follow not found");
     }
     else{
         follow = await Follow.deleteOne({
-            followerId: followerId,
-            followingId: followingId
+            _id: id
         });
     }
     return follow;
 }
 //Updates list
-async function deleteFollower(id, User) {
-    const follow = await getFollowById(id);
+async function deleteFollower(id, username) {
+    const follow =  await getFollowById(id);
+    if (!follow) {
+        throw new Error("Follow not found");
+    }
     await Follow.updateOne(
         { _id: id },
         { $pull: { followingId: (await getUser(username))._id } }
     );
+    return await getFollowById(id);
 }
 async function addfollower(id, username) {
     const follow =  await getFollowById(id);
