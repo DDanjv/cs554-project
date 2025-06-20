@@ -89,6 +89,19 @@ router
                 message: error.message
             });
         }
+    })
+    .get('/GetUserById', async (req, res) => {
+        try {
+            const user = await User.GetUserById(req.body.id);
+            res.send({
+                user,
+                id: undefined
+            });
+        } catch (error) {
+            res.status(401).send({
+                message: error.message
+            });
+        }
     });
     
 module.exports = router;
