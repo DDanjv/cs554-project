@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
@@ -14,7 +16,11 @@ async function login(username, password){
     if(user.password !== password){
         throw new Error("Wrong password");
     }
-    return user;
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
+        throw Error('Wrong Password');
+    }
+    return user._doc;
 }
 
 //get functions
@@ -47,10 +53,12 @@ async function register(username, email, password){
         throw new Error("Username already exists");
     }
     else{
+        const salt = await brcypt.genSalt(10);
+        const hashed = await brcypt.hash(password, salt);
         const newUser = new User({
-            username, 
-            email, 
-            password
+            username: username,
+            email: email,
+            password: hashed
         });
         await newUser.save();
         return newUser;
