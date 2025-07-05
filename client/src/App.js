@@ -1,9 +1,10 @@
 import './App.css';
 import Books from './components/Books.js';
-import About from './components/about.js';
+import About from './components/pages/about.js';
 import Navbar from './components/Navbar.js'
-import LoginForm from './components/LoginForm.js'
-import RegisterForm from './components/RegisterForm.js';
+import LoginForm from './components/pages/LoginForm.js'
+import RegisterForm from './components/pages/RegisterForm.js';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const user = {
   id: 12345,
@@ -30,12 +31,18 @@ const books = [
 function App() {
   return (
     <div className="App">
-      <Navbar />
-      <div className="grid-container">
-        <About/>
-        <LoginForm/>
-        <RegisterForm/>
-      </div>
+      <BrowserRouter>
+        <Navbar />
+        <div className="grid-container">
+          <Routes>
+            <Route path="/" element={<Navbar />} />
+            <Route path="about" element={<About />} />
+            <Route path="login" element={<LoginForm />} />
+            <Route path="books" element={<Books books={books} />} />
+            <Route path="register" element={<RegisterForm />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </div>
   );
 }
