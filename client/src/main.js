@@ -6,10 +6,14 @@ export async function fetchdata(route = '', data = {}, methodType ) {
         },
         body: JSON.stringify(data)
     });
-    if (!response.ok) {
-        return await response.json();
+    const json = await response.json();
+    if (json.success === false) {
+        throw json;
+    }
+    if (response.ok) {
+        return json;
     }
     else{
-        throw await response.json();
+        throw json;
     }
 }

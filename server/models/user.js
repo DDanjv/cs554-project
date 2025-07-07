@@ -13,9 +13,6 @@ const User = mongoose.model('User', userSchema);
 //read
 async function login(username, password){
     const user = await getUser(username);
-    if(user.password !== password){
-        throw new Error("Wrong password");
-    }
     const isMatch = await bcrypt.compare(password, user.password);
     if(!isMatch){
         throw Error('Wrong Password');
@@ -53,8 +50,8 @@ async function register(username, email, password){
         throw new Error("Username already exists");
     }
     else{
-        const salt = await brcypt.genSalt(10);
-        const hashed = await brcypt.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt);
         const newUser = new User({
             username: username,
             email: email,

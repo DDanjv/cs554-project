@@ -7,11 +7,13 @@ router
         try{
             const user = await User.login(req.body.username, req.body.password);
             res.send({
+                success: true,
                 user,
-                password: undefined,
+                password: null,
             })
         } catch (error){
             res.status(401).send({
+                success: false,
                 message: error.message
             })
 
@@ -21,15 +23,18 @@ router
         try{
             const user = await User.register(req.body.username, req.body.email, req.body.password);
             res.send({
+                success: true,
                 user,
-                username: undefined,
-                email: undefined,
-                password: undefined
+                username: null,
+                email: null,
+                password: null
 
             })
+
         }
         catch (error){
             res.status(401).send({
+                success: false,
                 message: error.message
             })
         }

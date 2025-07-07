@@ -1,5 +1,5 @@
 import { fetchdata } from "../../main.js";
-import { useState } from "react";
+import {useState} from "react";
 const RegisterForm = () => {
     const [user, setUser] = useState(
         {
@@ -12,8 +12,13 @@ const RegisterForm = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        if (!username || !email || !password) {
+            alert("All fields are required");
+            return;
+        }   
+        // console.log("user:", user);
         try {
-            const response = await fetchdata('/register', user, 'POST');
+            const response = await fetchdata('/user/register', user, 'POST');
             if (response.success) {
                 alert("Registration successful");
                 window.location.href = '/login';
@@ -21,8 +26,8 @@ const RegisterForm = () => {
                 alert(response.message);
             }
         } catch (error) {
-            console.error("registration error:", error);
-            alert("failed. try again.");
+            console.error("registration error:11", error.message);
+            alert(`failed. try again.`);
         }
     }
 
@@ -31,21 +36,21 @@ const RegisterForm = () => {
     }
     return (
         <form onSubmit={onSubmit}>
-            <div class = "objdefbig">
+            <div className = "objdefbig">
                 <h2>Register</h2>
                 <div>
                     <label htmlFor="username">Username:</label>
-                    <input class = "objdef" type="text" id="username" name="username" onchange={onChange} value={username} required />
+                    <input className = "objdef" type="text" id="username" name="username" onChange={onChange} value={username} required />
                 </div>
                 <div>
                     <label htmlFor="email">Email    : </label>
-                    <input class = "objdef" type="email" id="email" name="email" onchange={onChange} value={email} required />
+                    <input className = "objdef" type="email" id="email" name="email" onChange={onChange} value={email} required />
                 </div>
                 <div>
                     <label htmlFor="password">Password:</label>
-                    <input class = "objdef" type="password" id="password" name="password" onchange={onChange} value={password} required />
+                    <input className = "objdef" type="password" id="password" name="password" onChange={onChange} value={password} required />
                 </div>
-                <button class = "objdef" type="submit">Register</button>
+                <button className = "objdef" type="submit">Register</button>
             </div>
         </form>
     );
