@@ -1,36 +1,40 @@
-export const fetchdata = async (url, data = {}, method = 'GET') => {
-    const options = {
+export let fetchdata = async (url, data = {}, method = 'GET') => {
+    let options = {
         method,
         headers: {
             'Content-Type': 'application/json',
         },
     };
 
-    let fullUrl = `http://localhost:5000${url}`;
+    //to handle if need to be changed to query of body 
+    let urlFull = `http://localhost:5000${url}`;
 
     if (method === 'GET' || method === 'DELETE') {
-        const queryParams = new URLSearchParams(data).toString();
-        if (queryParams) {
-            fullUrl += `?${queryParams}`;
+        let quePar = new URLSearchParams(data).toString();
+        if (quePar) {
+            urlFull += `?${quePar}`;
         }
     } else {
+        //adds body in if need instead
         options.body = JSON.stringify(data);
     }
 
     try {
-        const response = await fetch(fullUrl, options);
 
-        const contentType = response.headers.get('content-type');
+        // to handle different response types if need 
+        let response = await fetch(urlFull, options);
+        let contentType = response.headers.get('content-type');
+
         if (contentType && contentType.includes('application/json')) {
-            const jsonResponse = await response.json();
+            let jsonRes = await response.json();
             if (!response.ok) {
-                throw new Error(jsonResponse.message || 'Something went wrong');
+                throw new Error(jsonRes.message || 'error indeterminate');
             }
-            return jsonResponse;
+            return jsonRes;
         } else {
-            const text = await response.text();
+            let text = await response.text();
             if (!response.ok) {
-                throw new Error(text || 'Something went wrong');
+                throw new Error(text || 'error indeterminate');
             }
             return { success: true, message: text }; 
         }
@@ -39,6 +43,8 @@ export const fetchdata = async (url, data = {}, method = 'GET') => {
         return { success: false, message: error.message || 'Network error' };
     }
 };
+
+//old verions left if need to change back 
 /*export async function fetchdata(route = '', data = {}, methodType ) {
     let url = `http://localhost:5000${route}`;
     let options = {

@@ -3,14 +3,7 @@ import { useUserGlobal } from '../../UserGlobal.js';
 import FollowList from '../followlist.js';
 import { activateFollow } from '../activateFollow.js'; 
 import { handleFollowSubmit } from './followActions.js';
-import {
-    handleCreatePost,
-    handlegetPostById,
-    handleUpdatePost,
-    handleDeletePost
-} from './postActions.js';
-
-
+import { handleCreatePost, handleGetPostById, handleUpdatePost, handleDeletePost, handleGetPostByName} from './postActions.js';
 const Dashboard = () => {
     const { user, logout } = useUserGlobal();
 
@@ -32,8 +25,12 @@ const Dashboard = () => {
     // Handlers for post actions
     const onCreatePost = async () => {
         try {
-            const post = await handleCreatePost({ title: postTitle, text: postText, userId: user._id });
-            setResponseMessage(JSON.stringify(post, null, 2));
+            const response = await handleCreatePost({ title: postTitle, text: postText, userId: user._id });
+            console.log(response);
+            if (response.success && response.post) {
+                const { title, text, _id } = response.post;
+                setResponseMessage(JSON.stringify({ title, text, _id }, null, 2));
+            }
         } catch (err) {
             setResponseMessage(err.message);
         }
@@ -41,17 +38,38 @@ const Dashboard = () => {
 
     const onGetPostById = async () => {
         try {
-            const post = await handlegetPostById({ id: postId });
-            setResponseMessage(JSON.stringify(post, null, 2));
+            const response = await handleGetPostById({ id: postId });
+            console.log(response);
+            if (response.success && response.post) {
+                const { title, text, _id } = response.post;
+                setResponseMessage(JSON.stringify({title, text, _id }, null, 2));
+            }
         } catch (err) {
             setResponseMessage(err.message);
         }
     };
-
-    const onUpdatePost = async () => {
+    const onGetPostByName = async () => {
         try {
-            const post = await handleUpdatePost({ id: postId, title: postTitle, text: postText });
-            setResponseMessage(JSON.stringify(post, null, 2));
+            const response = await handleGetPostByName({ title: postTitle });
+            console.log(response);
+            if (response.success && response.post) {
+                const { title, text, _id } = response.post;
+                setResponseMessage(JSON.stringify({title, text, _id }, null, 2));
+            }
+        } catch (err) {
+            setResponseMessage(err.message);
+        }
+    };
+    
+
+    let onUpdatePost = async () => {
+        try {
+            let response = await handleUpdatePost({ id: postId, title: postTitle, text: postText });
+            if (response.success && response.post) {
+                setResponseMessage(JSON.stringify(response.message, null, 2));
+            }else {
+                setResponseMessage(response.message || "Update failed"); // changed
+            }
         } catch (err) {
             setResponseMessage(err.message);
         }
@@ -60,7 +78,9 @@ const Dashboard = () => {
     const onDeletePost = async () => {
         try {
             const result = await handleDeletePost({ id: postId });
-            setResponseMessage(result);
+            if(result.success){
+                setResponseMessage("delete");
+            }
         } catch (err) {
             setResponseMessage(err.message);
         }
@@ -110,7 +130,8 @@ const Dashboard = () => {
                         <button className = "objdef" onClick={onCreatePost}>Create Post</button>
                         <button className = "objdef"  onClick={onGetPostById}>Get Post by ID</button>
                         <button className = "objdef" onClick={onUpdatePost}>Update Post</button>
-                        <button  className = "objdef" WonClick={onDeletePost}>Delete Post</button>
+                        <button  className = "objdef" onClick={onDeletePost}>Delete Post</button>
+                        <button  className = "objdef" onClick={onGetPostByName}>Get Post by Name</button>
                     </div>
 
                     <h3>Response</h3>
@@ -120,6 +141,13 @@ const Dashboard = () => {
                         readOnly
                         style={{ width: '90%' , height: '500px'}}
                     />
+                </div>
+                <div className='objdef'>
+                    <h2>Your Post</h2>
+                    <div className='objdef'>
+                        
+                    </div>
+
                 </div>
 
                 <div className="objdef">

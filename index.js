@@ -8,7 +8,7 @@ const userRoutes = require('./server/routes/user');
 const postRoutes = require('./server/routes/post');
 const followRoutes = require('./server/routes/follow');
 
-console.log(process.env.dbURL);
+
 mongoose.connect(process.env.dbURL)
     .then(console.log("MongoDB connected"))
     .catch(error => console.log(error));

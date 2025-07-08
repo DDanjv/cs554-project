@@ -18,7 +18,13 @@ async function getPostById(id) {
     }
     return post;
 }
-
+async function getPostByName(title) {
+    const post = await Post.findOne({ title: title });
+    if (!post) {
+        throw new Error("Post not found");
+    }
+    return post;
+}
 //create
 
 async function createPost(title, text, userId) {
@@ -43,7 +49,7 @@ async function createPost(title, text, userId) {
 
 // edit 
 async function updatePost(id, title, text) {
-    const post = await getPostById(id);
+    let post = await getPostById(id);
     if(title === null || text === null){
         throw new Error("missing info");
 
@@ -54,7 +60,7 @@ async function updatePost(id, title, text) {
         { $set: { title, text } }
         );
     }
-    return await getPostById(id);
+    return post;
 
 }
 // delete
@@ -63,11 +69,20 @@ async function deletePost(id) {
     await Post.deleteOne({"_id": post._id});
     return "Post deleted successfully";
 }
+//get all posts from a user
+async function getUserAllPosts(userId) {
+    const posts = await Post.find({ userId: userId });
+    if (!posts || posts.length === 0) {
+        throw new Error("No posts found for this user");
+    }
+    return posts;
+}
 
 module.exports = {
     getPostById,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    getPostByName
 };
 
