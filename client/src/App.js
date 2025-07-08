@@ -1,5 +1,4 @@
 import './App.css';
-import Books from './components/Books.js';
 import About from './components/pages/about.js';
 import Navbar from './components/Navbar.js'
 import LoginForm from './components/pages/LoginForm.js'
@@ -9,6 +8,7 @@ import Dashboard from './components/pages/Dashboard.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
 import './App.css'; 
+import SettingForm from './components/pages/SettingFrom.js';
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
             <Route path="login" element={<LoginForm />} />
             <Route path="register" element={<RegisterForm />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="settings" element={<SettingForm />} />
           </Routes>
         </div>
       </BrowserRouter>

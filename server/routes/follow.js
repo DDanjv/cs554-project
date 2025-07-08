@@ -35,7 +35,7 @@ router
             const follow = await Follow.getFollowById(req.body.id);
             res.send({
                 follow,
-                id: undefined
+                id: undefined,
             });
         } catch (error) {
             res.status(401).send({
@@ -43,12 +43,27 @@ router
             });
         }
     })
+    .get('/getFollowers', async (req, res) => {
+        try {
+            const follow = await Follow.getFollowers(req.query.id);
+            res.send({
+                success: true,
+                follow,
+                id: undefined,
+            });
+        } catch (error) {
+            res.status(401).send({
+                success: false,
+                message: error.message
+            });
+        }
+    })
     .delete('/deleteFollow', async (req, res) => {
         try {
-            const follow = await Follow.deleteFollow(req.body.id);
+            const follow = await Follow.deleteFollow(req.query.followerId);
             res.send({
-                follow,
-                id: undefined
+                message: "Follow deleted",
+                result: follow
             });
         } catch (error) {
             res.status(401).send({

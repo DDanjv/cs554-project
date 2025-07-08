@@ -1,12 +1,12 @@
 import React from 'react';
 const About = () => {
   return (
-    <div class = "objdefbig">
+    <div className = "objdefbig">
       <h2>About This App</h2>
-      <p>This app is a app</p>
-      <p>obyfagsgaobruivbuyfsadADFBJL
-        IFSEDubvhygasdfhoifwEHBJVKGOIPJH
-        TAFHBJVWEgojpiobjiwgu0abfhwgarpnjfWBHLHOAITPBGAHGHAOIFBHWOGHAPHBFwhgok</p>
+      <p className = "objdef">
+        This app is a app
+        this is a mock app for 
+        class 554</p>
     </div>
   );
 }

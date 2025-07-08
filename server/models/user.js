@@ -63,18 +63,19 @@ async function register(username, email, password){
 }
 //update
 
-async function UpdatePassword(id, password) {
+async function UpdatePassword(id, newPassword) {
     const user = await GetUserById(id);
-    if (await User.findOne({"_id": id, "password": password})) {
-        throw new Error("Password already exists");
-        
-    } 
-    else if(user.password === password){
-        throw new Error("New password cannot be the same as old password");
+
+    const isSame = await bcrypt.compare(newPassword, user.password);
+    if (isSame) {
+        throw new Error("New password cannot be the same as the old password");
     }
-    else {
-        await User.updateOne({"_id": id}, { $set: { password: password } });
-    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(newPassword, salt);
+
+    await User.updateOne({ _id: id }, { $set: { password: hashed } });
+    return "Password updated successfully";
 }
 
 async function UpdateEmail(id, email) {

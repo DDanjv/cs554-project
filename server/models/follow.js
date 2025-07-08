@@ -15,7 +15,7 @@ async function getFollowById(id) {
     return follow;
 }
 async function getFollowers(followerId) {
-    const follow = await Follow.findById({"followerId": followerId});
+    const follow = await Follow.findOne({"followerId": followerId});
     return follow;
 }
 
@@ -36,17 +36,11 @@ async function createFollow(id) {
     return newFollow;
 }
 //delete
-async function deleteFollow(id) {
-    const follow = await getFollowById(id);
-    if (!follow) {
-        throw new Error("Follow not found");
-    }
-    else{
-        follow = await Follow.deleteOne({
-            _id: id
-        });
-    }
-    return follow;
+async function deleteFollow(followerId) {
+    const follow = await getFollowers(followerId);
+    if (!follow) throw new Error("Follow not found");
+    const deleted = await Follow.deleteOne({ _id: follow._id });
+    return deleted;
 }
 //Updates list
 async function deleteFollower(id, username) {
@@ -60,16 +54,17 @@ async function deleteFollower(id, username) {
     );
     return await getFollowById(id);
 }
-async function addfollower(id, username) {
-    const follow =  await getFollowById(id);
-    if (!follow) {
+async function addfollower(followerId, username) {
+    const follow = await Follow.findOne({ followerId });
+    if (!follow){
         throw new Error("Follow not found");
     }
-    await Follow.updateOne(
-        { _id: id },
-        { $addToSet: { followingId: (await getUser(username))._id } }
-    );
-    return await getFollowById(id);
+    const userToFollow = await getUser(username);
+    await Follow.updateOne({ 
+        _id: follow._id }, 
+        { $addToSet: { followingId: userToFollow._id } 
+    });
+    return await Follow.findById(follow._id);
 }
 
 module.exports = {

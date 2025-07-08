@@ -16,7 +16,6 @@ const RegisterForm = () => {
             alert("All fields are required");
             return;
         }   
-        // console.log("user:", user);
         try {
             const response = await fetchdata('/user/register', user, 'POST');
             if (response.success) {
@@ -26,7 +25,7 @@ const RegisterForm = () => {
                 alert(response.message);
             }
         } catch (error) {
-            console.error("registration error:11", error.message);
+            console.error("registration error:", error.message);
             alert(`failed. try again.`);
         }
     }
@@ -43,7 +42,7 @@ const RegisterForm = () => {
                     <input className = "objdef" type="text" id="username" name="username" onChange={onChange} value={username} required />
                 </div>
                 <div>
-                    <label htmlFor="email">Email    : </label>
+                    <label htmlFor="email">Email '@': </label>
                     <input className = "objdef" type="email" id="email" name="email" onChange={onChange} value={email} required />
                 </div>
                 <div>

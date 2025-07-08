@@ -83,23 +83,26 @@ router
     })
     .delete('/DeleteUser', async (req, res) => {
         try {
-            const user = await User.DeleteUser(req.body.id)
+            const user = await User.DeleteUser(req.query.id)
             res.send({
+                success: true,
                 user,
                 id: undefined
             });
         }
         catch (error) {
             res.status(401).send({
+                success: false,
                 message: error.message
             });
         }
     })
     .get('/GetUserById', async (req, res) => {
         try {
-            const user = await User.GetUserById(req.body.id);
+            const user = await User.GetUserById(req.query.id);
             res.send({
-                user,
+                success: true,
+                user: user.username,
                 id: undefined
             });
         } catch (error) {
