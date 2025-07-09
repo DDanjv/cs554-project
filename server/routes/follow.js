@@ -58,7 +58,7 @@ router
     })
     .delete('/deleteFollower', async (req, res) => {
         try {
-            const follow = await Follow.deleteFollower(req.body.id, req.body.username);
+            const follow = await Follow.deleteFollower(req.query.id, req.query.username);
             res.send({
                 follow,
                 id: undefined,

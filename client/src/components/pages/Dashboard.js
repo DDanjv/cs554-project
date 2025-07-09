@@ -229,7 +229,7 @@ const Dashboard = () => {
                         <button className="objdef" onClick={onAddFollow}>Add Follower</button>
                         <button className="objdef" onClick={onCreateDeleteFollower}>Delete Follower</button>
                         <button className="objdef" onClick={onCreateDeleteFollow}>Delete Follow</button>
-                        <button className="objdef" onClick={null}>Refresh Follows</button>
+                        <button className="objdef" onClick={onGetFollowerId}>Refresh Follows</button>
                     </div>
 
                     <h3>Response</h3>

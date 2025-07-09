@@ -85,11 +85,11 @@ export const handleDeleteFollow = async ({ followerId }) => {
         throw err;
     }
 };
-export const handleDeleteFollower = async ({ id, username }) => {
+export const handleDeleteFollower = async ({ userId, followerUsername }) => {
     try {
-        const response = await fetchdata("/follow/deleteFollower", { id, username }, "DELETE");
+        const response = await fetchdata("/follow/deleteFollower", { id: userId, username: followerUsername }, "DELETE");
         if (response.success) {
-            return { success: true, follow: response.follow, message: `Unfollowed ${username}` };
+            return { success: true, follow: response.follow, message: `Unfollowed ${followerUsername}` };
         }
     } catch (err) {
         console.error("Error deleting follower:", err.message);
