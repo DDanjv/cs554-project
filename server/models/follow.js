@@ -11,12 +11,19 @@ const Follow = mongoose.model('Follow', followSchema)
 
 //read
 async function getFollowById(id) {
-    const follow = await Follow.findById({"_id": id});
-    return follow;
+    const existingFollow = await Follow.findById({"_id": id});
+    if(!existingFollow){
+        throw new Error("follower not found");
+    }
+    return existingFollow;
 }
+
 async function getFollowers(followerId) {
-    const follow = await Follow.findOne({"followerId": followerId});
-    return follow;
+    const follow = await Follow.findOne({ followerId }).populate('followingId');
+    if (!follow) {
+        throw new Error("Follow not found for this user");
+    }
+    return follow.followingId; // This will return populated user objects
 }
 
 //create

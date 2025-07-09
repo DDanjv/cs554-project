@@ -83,6 +83,7 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
-    getPostByName
+    getPostByName,
+    getUserAllPosts
 };
 

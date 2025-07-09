@@ -55,10 +55,10 @@ router
         })
     .get('/getUserAllPosts', async (req, res) => {
             try{
-                const post = await User.getPostByName(req.query.userId);
+                const posts = await User.getUserAllPosts(req.query.userId);
                 res.send({
                     success: true,
-                    post,
+                    posts,
                     id: undefined
                 })
             } catch (error){

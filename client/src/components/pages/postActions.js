@@ -44,17 +44,17 @@ export const handleGetPostByName = async ({ title }) => {
   }
 };
 export const handlegetUserAllPosts = async ({ userId }) => {
-  try {
-    const response = await fetchdata("/post/getPostByName", { "userId": userId }, "GET");
-    if (response.success) {
-      return { success: true, post: response.post, message: 'allpost' };
-    } else {
-      throw new Error(response.message || "Failed to fetch post");
+    try {
+        const response = await fetchdata("/post/getUserAllPosts", { "userId": userId }, "GET");
+        if (response.success) {
+            return { success: true, posts: response.posts, message: 'All user posts fetched successfully' };
+        } else {
+            throw new Error(response.message || "Failed to fetch user's posts");
+        }
+    } catch (err) {
+        console.error("Error getting user's posts:", err.message);
+        throw err;
     }
-  } catch (err) {
-    console.error("Error getting post:", err.message);
-    throw err;
-  }
 };
 
 export const handleUpdatePost = async ({ id, title, text }) => {

@@ -1,3 +1,4 @@
+import { fetchdata } from "../../main.js";
 export async function handleFollowSubmit(followerId, usernameToFollow, setUsernameToFollow) {
     if (!usernameToFollow) {
         alert("Enter a username to follow");
@@ -28,3 +29,70 @@ export async function handleFollowSubmit(followerId, usernameToFollow, setUserna
         return null;
     }
 }
+export const handleCreateFollow = async ({ userId }) => {
+    try {
+        const response = await fetchdata("/follow/createFollow", { followerId: userId }, "POST");
+        if (response.success) {
+            return { success: true, follow: response.follow, message: 'Follow document created' };
+        }
+    } catch (err) {
+        console.error("Error creating follow:", err.message);
+        throw err;
+    }
+};
+export const handleAddFollow = async ({ id, username}) => {
+    try {
+        const response = await fetchdata("/follow/addfollower", { id: id, username: username}, "POST");
+        if (response.success) {
+            return { success: true, follow: response.follow, message: 'add follower' };
+        }
+    } catch (err) {
+        console.error("Error creating follow:", err.message);
+        throw err;
+    }
+};
+export const handleGetFollowById = async ({ id }) => {
+    try {
+        const response = await fetchdata("/follow/getFollowById", { id }, "GET");
+        if (response.success) {
+            return { success: true, follow: response.follow, message: 'Follow found' };
+        }
+    } catch (err) {
+        console.error("Error getting follow by ID:", err.message);
+        throw err;
+    }
+};
+export const handleGetFollowers = async ({ id }) => {
+    try {
+        const response = await fetchdata("/follow/getFollowers", { id }, "GET");
+        console.log(response, "qwerwqwe");
+        if (response.success) {
+            return { success: true, follow: response.follow, message: 'Followers found' };
+        }
+    } catch (err) {
+        console.error("Error getting followers:", err.message);
+        throw err;
+    }
+};
+export const handleDeleteFollow = async ({ followerId }) => {
+    try {
+        const response = await fetchdata("/follow/deleteFollow", { followerId }, "DELETE");
+        if (response.success) {
+            return { success: true, result: response.result, message: 'Follow deleted' };
+        }
+    } catch (err) {
+        console.error("Error deleting follow:", err.message);
+        throw err;
+    }
+};
+export const handleDeleteFollower = async ({ id, username }) => {
+    try {
+        const response = await fetchdata("/follow/deleteFollower", { id, username }, "DELETE");
+        if (response.success) {
+            return { success: true, follow: response.follow, message: `Unfollowed ${username}` };
+        }
+    } catch (err) {
+        console.error("Error deleting follower:", err.message);
+        throw err;
+    }
+};

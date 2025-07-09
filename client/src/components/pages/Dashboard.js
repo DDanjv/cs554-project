@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useUserGlobal } from '../../UserGlobal.js';
-import FollowList from '../followlist.js';
-import { activateFollow } from '../activateFollow.js'; 
-import { handleFollowSubmit } from './followActions.js';
-import { handleCreatePost, handleGetPostById, handleUpdatePost, handleDeletePost, handleGetPostByName} from './postActions.js';
+import { handleCreatePost, handleGetPostById, handleUpdatePost, handleDeletePost, handleGetPostByName, handlegetUserAllPosts } from './postActions.js';
+import { handleFollowSubmit, handleCreateFollow, handleAddFollow, handleGetFollowById, handleGetFollowers, handleDeleteFollow, handleDeleteFollower} from './followActions.js';
 const Dashboard = () => {
     const { user, logout } = useUserGlobal();
 
     // Follow state
     const [usernameToFollow, setUsernameToFollow] = useState('');
-
+    const [userFollows, setUserFollows] = useState([]);
+    const [followId, setFollowId] = useState('');
     // Post form states
     const [postId, setPostId] = useState('');
     const [postTitle, setPostTitle] = useState('');
     const [postText, setPostText] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
+    const [userPosts, setUserPosts] = useState([]); 
 
     // Follow submit
     async function onFollowSubmit(e) {
@@ -60,8 +60,19 @@ const Dashboard = () => {
             setResponseMessage(err.message);
         }
     };
+    const ongetUserAllPosts = async () => {
+        try {
+            const response = await handlegetUserAllPosts({ userId: user._id  });
+            console.log(response);
+            if (response.success && response.posts) {
+                setUserPosts(response.posts);
+                setResponseMessage("Posts loaded successfully");
+            }
+        } catch (err) {
+            setResponseMessage(err.message);
+        }
+    };
     
-
     let onUpdatePost = async () => {
         try {
             let response = await handleUpdatePost({ id: postId, title: postTitle, text: postText });
@@ -83,6 +94,61 @@ const Dashboard = () => {
             }
         } catch (err) {
             setResponseMessage(err.message);
+        }
+    };
+    const onCreateFollow = async () => {
+        try {
+            const response = await handleCreateFollow({ userId: user._id });
+            
+            setResponseMessage(JSON.stringify(response, null, 2));
+        } catch (error) {
+            setResponseMessage(error.message);
+        }
+    };
+    const onAddFollow = async () => {
+        try {
+            console.log(user._id);
+            console.log(usernameToFollow);
+            const followerId = await onGetFollowerId();
+            console.log(followerId);
+            const response = await handleAddFollow({ followerId, usernameToFollow });
+            setResponseMessage(JSON.stringify(response, null, 2));
+        } catch (error) {
+            setResponseMessage(error.message);
+        }
+    };
+    const onGetFollowerId = async () => {
+        try {
+            const response = await handleGetFollowers({ userId: user._id });
+            console.log(response);
+            return JSON.stringify(response._id, null, 2);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const onGetFollowers = async () => {
+        try {
+            const response = await handleGetFollowers({ userId: user._id });
+            setResponseMessage(JSON.stringify(response, null, 2));
+        } catch (error) {
+            setResponseMessage(error.message);
+        }
+    };
+    const onCreateDeleteFollow = async () => {
+        try {
+            const response = await handleDeleteFollow({ userId: user._id, usernameToUnfollow: usernameToFollow });
+            setResponseMessage(JSON.stringify(response, null, 2));
+        } catch (error) {
+            setResponseMessage(error.message);
+        }
+    };
+    const onCreateDeleteFollower = async () => {
+        try {
+            const response = await handleDeleteFollower({ userId: user._id, followerUsername: usernameToFollow });
+            setResponseMessage(JSON.stringify(response, null, 2));
+        } catch (error) {
+            setResponseMessage(error.message);
         }
     };
 
@@ -143,32 +209,64 @@ const Dashboard = () => {
                     />
                 </div>
                 <div className='objdef'>
-                    <h2>Your Post</h2>
-                    <div className='objdef'>
-                        
+                    <h2>Your Posts</h2>
+                    <button className="objdef" onClick={ongetUserAllPosts}>Refresh My Posts</button>
+                    <div className='objdef' style={{ maxHeight: '400px', overflow: 'auto' }}>
+                        {userPosts.length > 0 ? (
+                            userPosts.map(post => (
+                                <div key={post._id} style={{padding: '10px', margin: '10px 0', maxWidth: "500px" }}>
+                                    <h4>{post.title}</h4>
+                                    <p>{post.text}</p>
+                                    <small>ID: {post._id}</small>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No posts found for this user.</p>
+                        )}
                     </div>
-
                 </div>
-
                 <div className="objdef">
-                    <h2>Following</h2>
-                    <button className="objdef" onClick={() => activateFollow(user)}>Activate Follow permission</button>
+                    <h2>Follow Management</h2>
+
+                    <input
+                        className="objdef"
+                        type="text"
+                        placeholder="Username to follow/unfollow"
+                        value={usernameToFollow}
+                        onChange={e => setUsernameToFollow(e.target.value)}
+                    />
+
                     <div className="objdef">
-                        <p>Follow a user</p>
-                        <form onSubmit={onFollowSubmit}>
-                            <input
-                                className="objdef"
-                                type="text"
-                                placeholder="Enter username"
-                                value={usernameToFollow}
-                                onChange={e => setUsernameToFollow(e.target.value)}
-                            />
-                            <button type="submit">Follow</button>
-                        </form>
+                        <button className="objdef" onClick={onCreateFollow}>Create Follow</button>
+                        <button className="objdef" onClick={onAddFollow}>Add Follower</button>
+                        <button className="objdef" onClick={onCreateDeleteFollower}>Delete Follower</button>
+                        <button className="objdef" onClick={onCreateDeleteFollow}>Delete Follow</button>
+                        <button className="objdef" onClick={onGetFollowers}>Refresh Follows</button>
                     </div>
-                    <p>Follow list</p>
-                    <FollowList user={user} />
+
+                    <h3>Response</h3>
+                    <textarea
+                        className="objdef"
+                        value={responseMessage}
+                        readOnly
+                        style={{ width: '90%', height: '200px' }}
+                    />
                 </div>
+                <div className='objdef'>
+                    <h2>Your Follows</h2>
+                    <div className='objdef' style={{ maxHeight: '400px', overflow: 'auto' }}>
+                        {userFollows.length > 0 ? (
+                            userFollows.map((follow, index) => (
+                                <div key={index} style={{ padding: '10px', margin: '10px 0', maxWidth: "500px" }}>
+                                    <p>{follow.username || follow}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No follows found for this user.</p>
+                        )}
+                    </div>
+                </div>
+                
             </div>
         </div>
     );
