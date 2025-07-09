@@ -31,7 +31,7 @@ export async function handleFollowSubmit(followerId, usernameToFollow, setUserna
 }
 export const handleCreateFollow = async ({ userId }) => {
     try {
-        const response = await fetchdata("/follow/createFollow", { followerId: userId }, "POST");
+        const response = await fetchdata("/follow/createFollow", { id: userId }, "POST");
         if (response.success) {
             return { success: true, follow: response.follow, message: 'Follow document created' };
         }
@@ -40,9 +40,9 @@ export const handleCreateFollow = async ({ userId }) => {
         throw err;
     }
 };
-export const handleAddFollow = async ({ id, username}) => {
+export const handleAddFollow = async ({ id, usernameToFollow }) => {
     try {
-        const response = await fetchdata("/follow/addfollower", { id: id, username: username}, "POST");
+        const response = await fetchdata("/follow/addfollower", { id: id, username: usernameToFollow }, "POST");
         if (response.success) {
             return { success: true, follow: response.follow, message: 'add follower' };
         }

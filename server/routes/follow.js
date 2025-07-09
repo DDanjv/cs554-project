@@ -5,10 +5,10 @@ const router = express.Router();
 router
     .post('/createFollow', async (req, res) => {
         try {
-            const follow = await Follow.createFollow(req.body.followerId);
+            const follow = await Follow.createFollow(req.body.id);
             res.send({
                 follow,
-                followerId: undefined
+                followiderId: undefined
             });
         } catch (error) {
             res.status(401).send({
@@ -39,21 +39,6 @@ router
             });
         } catch (error) {
             res.status(401).send({
-                message: error.message
-            });
-        }
-    })
-    .get('/getFollowers', async (req, res) => {
-        try {
-            const follow = await Follow.getFollowers(req.query.id);
-            res.send({
-                success: true,
-                follow,
-                id: undefined,
-            });
-        } catch (error) {
-            res.status(401).send({
-                success: false,
                 message: error.message
             });
         }

@@ -107,11 +107,8 @@ const Dashboard = () => {
     };
     const onAddFollow = async () => {
         try {
-            console.log(user._id);
             console.log(usernameToFollow);
-            const followerId = await onGetFollowerId();
-            console.log(followerId);
-            const response = await handleAddFollow({ followerId, usernameToFollow });
+            const response = await handleAddFollow({ id: user._id , usernameToFollow });
             setResponseMessage(JSON.stringify(response, null, 2));
         } catch (error) {
             setResponseMessage(error.message);
@@ -119,20 +116,11 @@ const Dashboard = () => {
     };
     const onGetFollowerId = async () => {
         try {
-            const response = await handleGetFollowers({ userId: user._id });
+            const response = await handleGetFollowers({ id: user._id });
             console.log(response);
-            return JSON.stringify(response._id, null, 2);
+            return JSON.stringify(response, null, 2);
         } catch (error) {
             console.log(error)
-        }
-    };
-
-    const onGetFollowers = async () => {
-        try {
-            const response = await handleGetFollowers({ userId: user._id });
-            setResponseMessage(JSON.stringify(response, null, 2));
-        } catch (error) {
-            setResponseMessage(error.message);
         }
     };
     const onCreateDeleteFollow = async () => {
@@ -241,7 +229,7 @@ const Dashboard = () => {
                         <button className="objdef" onClick={onAddFollow}>Add Follower</button>
                         <button className="objdef" onClick={onCreateDeleteFollower}>Delete Follower</button>
                         <button className="objdef" onClick={onCreateDeleteFollow}>Delete Follow</button>
-                        <button className="objdef" onClick={onGetFollowers}>Refresh Follows</button>
+                        <button className="objdef" onClick={null}>Refresh Follows</button>
                     </div>
 
                     <h3>Response</h3>
